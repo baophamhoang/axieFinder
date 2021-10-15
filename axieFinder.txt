@@ -1,0 +1,6 @@
+1. Tao Post request voi response la list id axie.
+2. parse from genes.
+3. map -> List of chosen ones.
+4. sort by prices.
+5. refreshButton/ Auto-refreshing
+6. Multiple lists.

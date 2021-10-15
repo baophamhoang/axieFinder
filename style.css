@@ -1,0 +1,46 @@
+*{
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+    -webkit-user-select: none;
+}
+html{
+    background-color: #f1e4e4;
+
+}
+img{
+    width: 150px;
+    text-align: center;
+    margin: auto;
+    display: block;
+    
+}
+ul li{
+    display: inline;
+    width: 150px;
+    height: 150px;
+    float: left;
+    border: solid 2px #3e6162;
+    margin: 10px;
+    border-radius: 5px;
+
+}
+ul li a{
+    text-decoration: none;
+
+}
+ul li:hover{
+    background-color: lightblue;
+    border: solid 2px #3e6162;
+}
+.axieList-name{
+    text-align: center;
+    width: 100%;
+    display: inline-block;
+    color: black;
+    
+}
+
+.trait-list{
+    
+}
