@@ -32,8 +32,9 @@ const bodyData ={
 //------- App -------
 
 function start(){
-    getAxieGenes();
+  getAxieGenes();
   // getAxieData(handleAxieList,2);
+  
 
 }
 
@@ -41,6 +42,7 @@ function start(){
 start();
 
 var axieDict;
+var axieData;
 
 var clsDict={
   '0000':"Beast",
@@ -80,13 +82,14 @@ function getAxieData(callback, number){
   var request= {
     "method": 'POST',
     "mode": "cors",
+    "Remote Address": "34.83.206.107:443",
     "credentials": "include",
     "referrer": "https://marketplace.axieinfinity.com/",
     "referrerPolicy": "strict-origin-when-cross-origin",
     "headers": {
       "accept": "*/*",
       "accept-language": "en-US,en;q=0.9,vi;q=0.8",
-      "authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2NvdW50SWQiOjEyMDQ1MDUsImFjdGl2YXRlZCI6dHJ1ZSwicm9uaW5BZGRyZXNzIjoiMHhkNjQ1OTAwOWQ2OWNkMGIwYjhlYTBhNmI3N2I3MjJlY2RmZWI0YjdjIiwiZXRoQWRkcmVzcyI6bnVsbCwiaWF0IjoxNjMzMDE3NDQ5LCJleHAiOjE2MzM2MjIyNDksImlzcyI6IkF4aWVJbmZpbml0eSJ9.xXO2nhc3fPGPosfyUJxt4qQzIrWTx0Chxy4IYmSi-2o",
+      "authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2NvdW50SWQiOjEyMDQ1MDUsImFjdGl2YXRlZCI6dHJ1ZSwicm9uaW5BZGRyZXNzIjoiMHhkNjQ1OTAwOWQ2OWNkMGIwYjhlYTBhNmI3N2I3MjJlY2RmZWI0YjdjIiwiZXRoQWRkcmVzcyI6bnVsbCwiaWF0IjoxNjM0MjYyMTE2LCJleHAiOjE2MzQ4NjY5MTYsImlzcyI6IkF4aWVJbmZpbml0eSJ9.Lu9IMycq6wYFrGbL_GbFhUFZaa7nBBSUfrIT0fD8imY",
       "content-type": "application/json",
       "sec-ch-ua": "\"Chromium\";v=\"94\", \"Google Chrome\";v=\"94\", \";Not A Brand\";v=\"99\"",
       "sec-ch-ua-mobile": "?0",
@@ -102,9 +105,9 @@ function getAxieData(callback, number){
         return response.json();
       })
       .then (response =>{
-        data = response;
-        console.log(data.data);
-        return data;
+        console.log(response);
+        axieData = response.data;
+        return response;
       })
       .then (data =>{
         var reponse = [];
@@ -113,18 +116,19 @@ function getAxieData(callback, number){
         })
       })
       // .then (response=>console.log(response))
-      .then (response=>{return combineAxieGenes(response)})
-      .then (response=>console.log(response))
+      .then (response=>{combineAxieGenes(response)})
+      .then (function(){
+        handleAxieList();
+        clickButton();
+      })
       
-
-
 }
 
 
 function handleAxieList(){
   var axieList = document.querySelector('ul');
-  var html = testData.data.axies.results.map( x =>{
-    let price =(x.auction.currentPrice* Math.pow(10,-19)).toFixed(5);
+  var html = axieData.axies.results.map( x =>{
+    let price =(x.auction.currentPrice* Math.pow(10,-18)).toFixed(5);
     return `<li><a href="https://marketplace.axieinfinity.com/axie/${x.id}"><div class="axieList-name">${x.name}</div>
     <img src="${x.image}"></a>     
     <div class="axieList-name">$${price}</div>
@@ -152,22 +156,20 @@ function splitAxieGenes(genes){
     tail: genes.slice(224,256),
   }
 }
-var gene="00001100001000010010000011000010";
 
 
 function combineAxieGenes(listGenes){
+  let count = 0;
   var gens = listGenes.map(x=>{
     partsCode = splitAxieGenes(hex2bin(Object.values(x)[0]));
     var gen ={};
+    
     for (const part in partsCode ){
       gen[part] = parseAxieGenes(partsCode[part],part); 
     }
-    return {
-      id: Object.keys(x)[0],
-      parts: gen
-    }
+    axieData.axies.results[count].parsed = gen;
+    count = count +1;
   });
-  return gens;
 }
 
 function parseAxieGenes(genes, bpart){
@@ -198,32 +200,63 @@ function hex2bin(x){
   return binPart.join("");
 }
 
+function clickButton(){
+  console.log(axieData);
+  let buttonElement = document.querySelector('.switch-gen-button');
+  var axieList = document.querySelector('ul');
+  console.log(axieData);
+  var html = axieData.axies.results.map( x =>{
+    // let price =(x.auction.currentPrice* Math.pow(10,-19)).toFixed(5);
+    return `<li><a href="https://marketplace.axieinfinity.com/axie/${x.id}"><div class="axieList-name">${x.name}</div> 
+    <div class="trait-name">
+    
 
-// var a =splitAxieGenes(hex2bin("0x30000000012094220c2120c210a308c8088008440c4230040cc1300a00c20948"));
-// console.log(a);
-// var b = "00001100001000010010000011000010";
-// console.log(parseAxieGenes(b));
+    <ul>
+      <li>eyes</li>
+      <li>ears</li>
+      <li>mouth</li>
+      <li>horn</li>
+      <li>back</li>
+      <li>tail</li>
+    </ul>
+    <ul>
+      <li>${x.parsed.eyes.D}</li>
+      <li>${x.parsed.ears.D}</li>
+      <li>${x.parsed.mouth.D}</li>
+      <li>${x.parsed.horn.D}</li>
+      <li>${x.parsed.back.D}</li>
+      <li>${x.parsed.tail.D}</li>
 
+    </ul>
+    <ul>
+      <li>${x.parsed.eyes.R1}</li>
+      <li>${x.parsed.ears.R1}</li>
+      <li>${x.parsed.mouth.R1}</li>
+      <li>${x.parsed.horn.R1}</li>
+      <li>${x.parsed.back.R1}</li>
+      <li>${x.parsed.tail.R1}</li>
+    </ul>
+    <ul>
+      <li>${x.parsed.eyes.R2}</li>
+      <li>${x.parsed.ears.R2}</li>
+      <li>${x.parsed.mouth.R2}</li>
+      <li>${x.parsed.horn.R2}</li>
+      <li>${x.parsed.back.R2}</li>
+      <li>${x.parsed.tail.R2}</li>
+    </ul>
+    
+    
 
-
-// function testUl(){
-//     var hexCode = "0x30000000012094220c2120c210a308c8088008440c4230040cc1300a00c20948";
-//     const { AxieGene } = require("agp-npm/dist/axie-gene")
-//     const axieGene = new AxieGene(hexCode);
-//     console.log(axieGene.getGeneQuality());
-//     genes = document.querySelector("ul");
-// }
-
-function showGenes(){
-  console.log(data.data.axies.results.map(x=>x.genes));
+    </div> </a>
+    </li>
+          `;
+  })
+  
+  buttonElement.addEventListener("click",function(){
+    axieList.innerHTML = html.join('');
+  })
 }
 
-function parseGenes(){
+function searchDual(){
 
 }
-
-
-
-
-// console.log(hex2bin("0x30000000012094220c2120c210a308c8088008440c4230040cc1300a00c20948"));
-
