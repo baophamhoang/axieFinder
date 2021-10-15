@@ -44,6 +44,9 @@ start();
 var axieDict;
 var axieData;
 
+var html;
+var html2;
+
 var clsDict={
   '0000':"Beast",
   '0001':"Bug",
@@ -120,18 +123,22 @@ function getAxieData(callback, number){
       .then (function(){
         handleAxieList();
         clickButton();
+        searchDual()
       })
       
 }
 
 
+
 function handleAxieList(){
   var axieList = document.querySelector('ul');
-  var html = axieData.axies.results.map( x =>{
+  html = axieData.axies.results.map( x =>{
     let price =(x.auction.currentPrice* Math.pow(10,-18)).toFixed(5);
     return `<li><a href="https://marketplace.axieinfinity.com/axie/${x.id}"><div class="axieList-name">${x.name}</div>
+    <div class="axieList-info">
     <img src="${x.image}"></a>     
     <div class="axieList-name">$${price}</div>
+    </div>
     </li>
           `;
   })
@@ -202,15 +209,13 @@ function hex2bin(x){
 
 function clickButton(){
   console.log(axieData);
-  let buttonElement = document.querySelector('.switch-gen-button');
+  let buttonElement = document.querySelector('#switch-gen-button');
   var axieList = document.querySelector('ul');
   console.log(axieData);
-  var html = axieData.axies.results.map( x =>{
+  html2 = axieData.axies.results.map( x =>{
     // let price =(x.auction.currentPrice* Math.pow(10,-19)).toFixed(5);
     return `<li><a href="https://marketplace.axieinfinity.com/axie/${x.id}"><div class="axieList-name">${x.name}</div> 
     <div class="trait-name">
-    
-
     <ul>
       <li>eyes</li>
       <li>ears</li>
@@ -244,19 +249,23 @@ function clickButton(){
       <li>${x.parsed.back.R2}</li>
       <li>${x.parsed.tail.R2}</li>
     </ul>
-    
-    
-
     </div> </a>
     </li>
           `;
   })
   
   buttonElement.addEventListener("click",function(){
-    axieList.innerHTML = html.join('');
+    let trait = document.querySelector('.trait-name');
+    if (!trait){
+      axieList.innerHTML = html2.join('');
+    }
+    else{
+      axieList.innerHTML = html.join('');
+    }
   })
 }
 
 function searchDual(){
-
+  let dualBladeButton = document.querySelector('#dual-search-button');
+  
 }

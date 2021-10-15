@@ -87,25 +87,25 @@ button{
     font-size: 16px;
     padding: 0 32px;
 }
-.switch-gen-button {
+#switch-gen-button {
     background-color: #4CAF50;    
     color: white;
     float: right;
     
  }
 
- .switch-gen-button:hover{
+#switch-gen-button:hover{
     background-color: #128f16;
  }
 
-.dual-search-button{
+#dual-search-button{
     background-color: #f7f324;    
     color: black;
     float: left;
 
 }
 
-.dual-search-button:hover{
+#dual-search-button:hover{
     background-color: #a3a12f;  
 
 }
