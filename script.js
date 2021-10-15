@@ -114,6 +114,7 @@ function getAxieData(callback, number){
       })
       // .then (response=>console.log(response))
       .then (response=>{return combineAxieGenes(response)})
+      .then (response=>console.log(response))
       
 
 
@@ -153,18 +154,20 @@ function splitAxieGenes(genes){
 }
 var gene="00001100001000010010000011000010";
 
+
 function combineAxieGenes(listGenes){
   var gens = listGenes.map(x=>{
-    return splitAxieGenes(hex2bin(x));
-  });
-  // return gens;
-  return(gens.map(x =>{
+    partsCode = splitAxieGenes(hex2bin(Object.values(x)[0]));
     var gen ={};
-    for (const part in x){
-      gen[part] = parseAxieGenes(x[part],part);
+    for (const part in partsCode ){
+      gen[part] = parseAxieGenes(partsCode[part],part); 
     }
-    return gen;
-  })); 
+    return {
+      id: Object.keys(x)[0],
+      parts: gen
+    }
+  });
+  return gens;
 }
 
 function parseAxieGenes(genes, bpart){
@@ -188,7 +191,7 @@ function parseAxieGenes(genes, bpart){
 }
 
 function hex2bin(x){
-  var hexPart = x.from(x.slice(2));
+  var hexPart = Array.from(x.slice(2));
   var binPart = hexPart.map( c=>{
     return parseInt(c,16).toString(2).padStart(4,0);
   })
